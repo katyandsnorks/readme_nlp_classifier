@@ -75,10 +75,16 @@ def clean(article):
 
 ### Get 10 Links from Github Search
 
-def get_links(pagenum=1):
-
+def get_links(pagenum=1,language='Python'):
     ''' This returns 10 Links as a list from Github's Search '''
-    response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E1+stars%3A%3E200+location%3AUSA+state%3Aopen&ref=advsearch&type=Repositories&utf8=%E2%9C%93',headers=headers)
+
+
+    if language.lower() == 'c++':
+        response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E200+location%3AUSA+language%3AC%2B%2B&ref=advsearch&type=Repositories&utf8=%E2%9C%93')
+    else:
+        response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E200+location%3AUSA+language%3A{language}&ref=advsearch&type=Repositories&utf8=%E2%9C%93')
+
+    
     soup = BeautifulSoup(response.text)
 
     link_list=[]
