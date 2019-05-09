@@ -7,6 +7,8 @@ import unicodedata
 import re
 from nltk.corpus import stopwords
 
+headers={'user-agent':'Snorks'}
+
 stopword_list = nltk.corpus.stopwords.words('english') + ['r', 'u', '2', 'ltgt']
 stopword_list.remove('no')
 stopword_list.remove('not')
@@ -45,7 +47,7 @@ def read_lang(url):
     return {'languages':langs, 'readme':' '.join(read_me[0].text.split())}
 
 
-### Clean text docs 
+### Clean text docs
 
 def basic_clean(article):
     article = ' '.join(article.split()).lower()
@@ -68,3 +70,20 @@ def clean(article):
     article = stem_words(article)
     article = drop_stop_words(article)
     return article
+
+
+
+### Get 10 Links from Github Search
+
+def get_links(pagenum=1):
+
+    ''' This returns 10 Links as a list from Github's Search '''
+    response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E1+stars%3A%3E200+location%3AUSA+state%3Aopen&ref=advsearch&type=Repositories&utf8=%E2%9C%93',headers=headers)
+    soup = BeautifulSoup(response.text)
+
+    link_list=[]
+    for i in range(7,len(soup.find_all(class_='v-align-middle'))):
+        if soup.find_all(class_='v-align-middle')[i].text[0]:
+            link_list.append(soup.find_all(class_='v-align-middle')[i].text)
+
+    return link_list
