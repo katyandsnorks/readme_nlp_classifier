@@ -84,7 +84,7 @@ def get_links(pagenum=1,language='Python'):
     else:
         response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E200+location%3AUSA+language%3A{language}&ref=advsearch&type=Repositories&utf8=%E2%9C%93')
 
-    
+
     soup = BeautifulSoup(response.text)
 
     link_list=[]
@@ -93,3 +93,19 @@ def get_links(pagenum=1,language='Python'):
             link_list.append(soup.find_all(class_='v-align-middle')[i].text)
 
     return link_list
+
+
+
+def get_all_links():
+
+    languages = ['Java','C++','Rust','Python','php','Ruby']
+
+    repo_lists = {}
+    for lang in languages:
+        repo_list = []
+        for page in range(1,12):
+            repo_list += prepare.get_links(pagenum=page,language=lang)
+            time.sleep(3)
+        repo_lists[lang] = repo_list
+
+    return repo_lists
