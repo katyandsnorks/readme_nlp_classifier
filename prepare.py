@@ -66,8 +66,8 @@ def drop_stop_words(article):
 
 def clean(article):
     article = basic_clean(article)
-    article = stem_words(article)
     article = drop_stop_words(article)
+    article = stem_words(article)
     return article
 
 
