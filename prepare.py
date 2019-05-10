@@ -9,9 +9,8 @@ from nltk.corpus import stopwords
 
 headers={'user-agent':'Snorks'}
 
-stopword_list = nltk.corpus.stopwords.words('english') + ['r', 'u', '2', 'ltgt']
-stopword_list.remove('no')
-stopword_list.remove('not')
+languages = ['Java','C++','Rust','Python','php','Ruby']
+stopword_list = nltk.corpus.stopwords.words('english') + ['r', 'u', '2', 'ltgt','yes','yeah','ye'] + [lang.lower() for lang in languages]
 
 import warnings
 warnings.filterwarnings("ignore")
