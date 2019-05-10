@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 import re
 import nltk
 import unicodedata
-import re
+import numpy as np
+import langdetect
 from nltk.corpus import stopwords
 
 headers={'user-agent':'Snorks'}
@@ -65,10 +66,15 @@ def drop_stop_words(article):
     return ' '.join(filtered_words)
 
 def clean(article):
-    article = basic_clean(article)
-    article = drop_stop_words(article)
-    article = stem_words(article)
-    return article
+    if langdetect.detect(article) != 'en':
+
+        return np.NaN
+
+    else:
+        article = basic_clean(article)
+        article = drop_stop_words(article)
+        article = stem_words(article)
+        return article
 
 
 
