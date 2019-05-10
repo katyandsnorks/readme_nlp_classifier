@@ -47,12 +47,12 @@ def read_lang(url):
     return {'languages':langs, 'readme':' '.join(read_me[0].text.split())}
 
 
-### Clean text docs
+# ## Clean text docs
 
 def basic_clean(article):
     article = ' '.join(article.split()).lower()
     article = unicodedata.normalize('NFKD',article).encode('ASCII','ignore').decode('utf-8', 'ignore')
-    article = re.sub(r"[^a-z0-9'\s]", '', article)
+    article = re.sub(r"[^a-z0-9\s]", '', article)
     return article
 
 def stem_words(article):
@@ -73,7 +73,7 @@ def clean(article):
 
 
 
-### Get 10 Links from Github Search
+# ## Get 10 Links from Github Search
 
 def get_links(pagenum=1,language='Python'):
     ''' This returns 10 Links as a list from Github's Search '''
