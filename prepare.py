@@ -8,10 +8,12 @@ import numpy as np
 import langdetect
 from nltk.corpus import stopwords
 
+### if you are missing langdetect, install with pip install langdetect
+
 headers={'user-agent':'Snorks'}
 
 languages = ['Java','C++','Rust','Python','php','Ruby']
-stopword_list = nltk.corpus.stopwords.words('english') + ['r', 'u', '2', 'ltgt','yes','yeah','ye'] + [lang.lower() for lang in languages]
+
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -50,32 +52,54 @@ def read_lang(url):
 # ## Clean text docs
 
 def basic_clean(article):
+    'Cleans all Tab and Newline chars, and removes non-english + speical chars'
     article = ' '.join(article.split()).lower()
     article = unicodedata.normalize('NFKD',article).encode('ASCII','ignore').decode('utf-8', 'ignore')
     article = re.sub(r"[^a-z0-9\s]", '', article)
     return article
 
+def remove_links(article):
+    ''
+    return re.sub(r'(https?:\/\/)(\s)?(www\.)?(\s?)(\w+\.)*([\w\-\s]+\/)*([\w-]+)\/?',' ',article)
+
 def stem_words(article):
+    'Uses simple Stemmer to stem each word'
     ps = nltk.porter.PorterStemmer()
     stems = [ps.stem(word) for word in article.split()]
     return ' '.join(stems)
 
-def drop_stop_words(article):
+def drop_stop_words(article, stop_words=[]):
+    ''
+    stopword_list = nltk.corpus.stopwords.words('english') + ['r', 'u', '2', 'ltgt','yes','yeah','ye'] + [lang.lower() for lang in languages] + stop_words
     words = article.split()
     filtered_words = [w for w in words if w not in stopword_list]
     return ' '.join(filtered_words)
 
-def clean(article):
+def clean(article,bonus_stopwords=[],skip_lang_check = True):
+    '''If Language != English, returns NaN, else lowers and cleans all data,
+     then drops stop words and stems words.
+     can add extra stop words by passing in a list like:  bonus_stopwords = []'''
+    if skip_lang_check:
+        article = basic_clean(article)
+        article = drop_stop_words(article,bonus_stopwords)
+        article = stem_words(article)
+        return article
+
     if langdetect.detect(article) != 'en':
 
         return np.NaN
 
     else:
         article = basic_clean(article)
-        article = drop_stop_words(article)
+        article = drop_stop_words(article,bonus_stopwords)
         article = stem_words(article)
         return article
 
+def deep_clean(article):
+    article = remove_links(article)
+    article = clean(article)
+    article = re.sub(r'\d','',article)
+    return article
 
 
 # ## Get 10 Links from Github Search
@@ -102,6 +126,8 @@ def get_links(pagenum=1,language='Python'):
 
 
 def get_all_links():
+
+    ''' Returns a large number of github repo links as a dictionary'''
 
     languages = ['Java','C++','Rust','Python','php','Ruby']
 
