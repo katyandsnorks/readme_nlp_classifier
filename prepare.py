@@ -83,6 +83,7 @@ def clean(article,bonus_stopwords=[],skip_lang_check = True):
         article = basic_clean(article)
         article = drop_stop_words(article,bonus_stopwords)
         article = stem_words(article)
+        article = drop_stop_words(article,bonus_stopwords)
         return article
 
     if langdetect.detect(article) != 'en':
@@ -95,9 +96,9 @@ def clean(article,bonus_stopwords=[],skip_lang_check = True):
         article = stem_words(article)
         return article
 
-def deep_clean(article):
+def deep_clean(article,bonus_stopwords=[]):
     article = remove_links(article)
-    article = clean(article)
+    article = clean(article,bonus_stopwords)
     article = re.sub(r'\d','',article)
     return article
 
