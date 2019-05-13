@@ -7,6 +7,7 @@ import unicodedata
 import numpy as np
 import langdetect
 from nltk.corpus import stopwords
+import time
 
 ### if you are missing langdetect, install with pip install langdetect
 
@@ -110,9 +111,9 @@ def get_links(pagenum=1,language='Python'):
 
 
     if language.lower() == 'c++':
-        response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E200+location%3AUSA+language%3AC%2B%2B&ref=advsearch&type=Repositories&utf8=%E2%9C%93')
+        response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E100+location%3AUSA+language%3AC%2B%2B&ref=advsearch&type=Repositories&utf8=%E2%9C%93')
     else:
-        response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E200+location%3AUSA+language%3A{language}&ref=advsearch&type=Repositories&utf8=%E2%9C%93')
+        response = requests.get(f'https://github.com/search?l=&p={pagenum}&q=stars%3A%3E100+location%3AUSA+language%3A{language}&ref=advsearch&type=Repositories&utf8=%E2%9C%93')
 
 
     soup = BeautifulSoup(response.text)
@@ -136,7 +137,7 @@ def get_all_links():
     for lang in languages:
         repo_list = []
         for page in range(1,12):
-            repo_list += prepare.get_links(pagenum=page,language=lang)
+            repo_list += get_links(pagenum=page,language=lang)
             time.sleep(3)
         repo_lists[lang] = repo_list
 
