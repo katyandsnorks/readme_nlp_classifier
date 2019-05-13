@@ -138,7 +138,7 @@ def get_all_links():
         repo_list = []
         for page in range(1,12):
             repo_list += get_links(pagenum=page,language=lang)
-            time.sleep(3)
+            time.sleep(20)
         repo_lists[lang] = repo_list
 
     return repo_lists
